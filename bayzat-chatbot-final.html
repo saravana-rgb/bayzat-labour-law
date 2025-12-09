@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bayzat Labour Law Assistant | مساعد قانون العمل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6b46c1 0%, #805ad5 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            padding: 1.5rem 2rem;
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .logo-container {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #6b46c1 0%, #805ad5 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(107, 70, 193, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50" y="70" font-size="60" fill="white" font-weight="bold" text-anchor="middle" font-family="Arial">B</text></svg>');
+            background-size: contain;
+            background-position: center;
+        }
+
+        .header-text h1 {
+            font-size: 1.75rem;
+            color: #1a202c;
+            margin-bottom: 0.25rem;
+            font-weight: 700;
+        }
+
+        .header-text p {
+            font-size: 0.95rem;
+            color: #718096;
+        }
+
+        .container {
+            flex: 1;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-container {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            max-height: calc(100vh - 180px);
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .message {
+            display: flex;
+            gap: 1rem;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+            font-size: 0.875rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .message.user .avatar {
+            background: linear-gradient(135deg, #6b46c1 0%, #805ad5 100%);
+            color: white;
+        }
+
+        .message.ai .avatar {
+            background: white;
+            border: 2px solid #6b46c1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .message.ai .avatar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50" y="70" font-size="55" fill="%236b46c1" font-weight="bold" text-anchor="middle" font-family="Arial">B</text></svg>');
+            background-size: contain;
+            background-position: center;
+        }
+
+        .message-content {
+            max-width: 75%;
+            padding: 1.125rem 1.5rem;
+            border-radius: 20px;
+            line-height: 1.65;
+            font-size: 0.95rem;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #6b46c1 0%, #805ad5 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 12px rgba(107, 70, 193, 0.25);
+        }
+
+        .message.ai .message-content {
+            background: #f7fafc;
+            color: #2d3748;
+            border: 1px solid #e2e8f0;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .article-ref {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            color: #92400e;
+            border: 1px solid #fbbf24;
+        }
+
+        .source-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            color: #1e40af;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.75rem;
+            border: 1px solid #93c5fd;
+        }
+
+        .google-result {
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 8px;
+        }
+
+        .google-result a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .google-result a:hover {
+            text-decoration: underline;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #cbd5e0;
+            border-radius: 50%;
+            animation: pulse 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.4;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .input-area {
+            padding: 1.75rem;
+            border-top: 1px solid #e2e8f0;
+            background: linear-gradient(to bottom, #f7fafc, #ffffff);
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 0.875rem;
+            align-items: flex-end;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        textarea {
+            flex: 1;
+            padding: 1rem 1.25rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            resize: none;
+            min-height: 54px;
+            max-height: 140px;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #6b46c1;
+            box-shadow: 0 0 0 3px rgba(107, 70, 193, 0.1);
+        }
+
+        button {
+            background: linear-gradient(135deg, #6b46c1 0%, #805ad5 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2.25rem;
+            border-radius: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 12px rgba(107, 70, 193, 0.3);
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(107, 70, 193, 0.4);
+        }
+
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+            border: 2px solid #c084fc;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-card h3 {
+            color: #581c87;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .welcome-card p {
+            color: #6b21a8;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .sample-questions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .sample-btn {
+            background: white;
+            color: #6b46c1;
+            border: 2px solid #6b46c1;
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            text-align: left;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .sample-btn:hover {
+            background: linear-gradient(135deg, #6b46c1 0%, #805ad5 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(107, 70, 193, 0.3);
+        }
+
+        .footer-note {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.875rem;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .message-content {
+                max-width: 85%;
+            }
+
+            .sample-questions {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-container {
+                max-height: calc(100vh - 220px);
+            }
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-left: 4px solid #ef4444;
+            color: #991b1b;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #6b46c1 0%, #805ad5 100%);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #553c9a 0%, #6b46c1 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo-container"></div>
+            <div class="header-text">
+                <h1>Bayzat Labour Law Assistant</h1>
+                <p>مساعد قانون العمل - AI-Powered Guidance from Official Documents & Saudi Government Sources</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="chat-container">
+            <div class="messages" id="messages">
+                <div class="welcome-card">
+                    <h3>👋 مرحباً! Welcome to Bayzat Labour Law Assistant</h3>
+                    <p>Ask me any question about Saudi Labour Law. I'll search through official documents first, and if needed, I'll search Saudi government websites to provide you with the most accurate and up-to-date information.</p>
+                    <div class="sample-questions">
+                        <button class="sample-btn" onclick="askQuestion('What are the maximum working hours per week in Saudi Arabia?')">
+                            ⏰ What are the maximum working hours per week?
+                        </button>
+                        <button class="sample-btn" onclick="askQuestion('How many days of annual leave am I entitled to?')">
+                            🏖️ How many days of annual leave am I entitled to?
+                        </button>
+                        <button class="sample-btn" onclick="askQuestion('How is end of service gratuity calculated?')">
+                            💰 How is end of service gratuity calculated?
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <textarea 
+                        id="questionInput" 
+                        placeholder="Ask any question about Saudi Labour Law... اسأل أي سؤال عن قانون العمل"
+                        rows="1"
+                        onkeypress="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); sendQuestion(); }"
+                    ></textarea>
+                    <button id="sendBtn" onclick="sendQuestion()">Send →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        Powered by Bayzat • For official legal matters, please consult MHRSD or qualified legal professionals
+    </div>
+
+    <script>
+        // Configuration - REPLACE WITH YOUR N8N WEBHOOK URL
+        const N8N_WEBHOOK_URL = 'https://your-n8n-instance.app.n8n.cloud/webhook/chat';
+        
+        function addMessage(type, content, metadata = {}) {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar';
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            
+            if (type === 'user') {
+                contentDiv.textContent = content;
+            } else {
+                contentDiv.innerHTML = content;
+                
+                // Add source badge
+                if (metadata.source) {
+                    const sourceBadge = document.createElement('div');
+                    sourceBadge.className = 'source-badge';
+                    if (metadata.source === 'document') {
+                        sourceBadge.innerHTML = '📄 Source: Official Labour Law Document';
+                    } else if (metadata.source === 'google') {
+                        sourceBadge.innerHTML = '🔍 Source: Saudi Government Websites (Google Search)';
+                    }
+                    contentDiv.appendChild(sourceBadge);
+                }
+            }
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(contentDiv);
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function addTypingIndicator() {
+            const messagesDiv = document.getElementById('messages');
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typing';
+            typingDiv.className = 'message ai';
+            typingDiv.innerHTML = `
+                <div class="avatar"></div>
+                <div class="message-content">
+                    <div class="typing-indicator">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            `;
+            messagesDiv.appendChild(typingDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const typing = document.getElementById('typing');
+            if (typing) typing.remove();
+        }
+
+        async function sendQuestion() {
+            const input = document.getElementById('questionInput');
+            const question = input.value.trim();
+            
+            if (!question) return;
+            
+            // Add user message
+            addMessage('user', question);
+            input.value = '';
+            
+            // Disable input
+            input.disabled = true;
+            document.getElementById('sendBtn').disabled = true;
+            
+            // Show typing indicator
+            addTypingIndicator();
+            
+            try {
+                const response = await fetch(N8N_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ question })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const data = await response.json();
+                removeTypingIndicator();
+                
+                if (data.success) {
+                    addMessage('ai', data.answer, data.metadata || {});
+                } else {
+                    addMessage('ai', '<div class="error-message">Sorry, there was an error processing your question. Please try again.</div>');
+                }
+            } catch (error) {
+                removeTypingIndicator();
+                console.error('Error:', error);
+                addMessage('ai', `
+                    <div class="error-message">
+                        <strong>⚠️ Connection Error</strong><br>
+                        Unable to connect to the service. Please check:<br>
+                        • Your internet connection<br>
+                        • The n8n webhook URL is correctly configured<br>
+                        • The n8n workflow is active
+                    </div>
+                `);
+            } finally {
+                input.disabled = false;
+                document.getElementById('sendBtn').disabled = false;
+                input.focus();
+            }
+        }
+
+        function askQuestion(question) {
+            document.getElementById('questionInput').value = question;
+            sendQuestion();
+        }
+
+        // Auto-resize textarea
+        document.getElementById('questionInput').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 140) + 'px';
+        });
+
+        // Focus input on load
+        window.addEventListener('load', () => {
+            document.getElementById('questionInput').focus();
+        });
+    </script>
+</body>
+</html>
